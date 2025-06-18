@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DinheiroSobControle.Model;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -76,11 +78,7 @@ public class DinheiroSobControleDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(DinheiroSobControleConsts.DbTablePrefix + "YourEntities", DinheiroSobControleConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        builder.Entity<LogEntry>().ToTable("Logs");
+        builder.Entity<LogEntry>().Property(l => l.Properties).HasColumnType("jsonb");
     }
 }

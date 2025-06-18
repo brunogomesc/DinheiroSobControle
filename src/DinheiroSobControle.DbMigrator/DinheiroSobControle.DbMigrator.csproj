@@ -36,6 +36,7 @@
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Autofac" Version="9.2.0" />
     <ProjectReference Include="..\DinheiroSobControle.Application.Contracts\DinheiroSobControle.Application.Contracts.csproj" />
+    <ProjectReference Include="..\DinheiroSobControle.Domain\DinheiroSobControle.Domain.csproj" />
     <ProjectReference Include="..\DinheiroSobControle.EntityFrameworkCore\DinheiroSobControle.EntityFrameworkCore.csproj" />
   </ItemGroup>
 

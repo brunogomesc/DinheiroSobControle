@@ -1,10 +1,14 @@
-using System;
-using System.Threading.Tasks;
+using Castle.Core.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.PostgreSQL;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DinheiroSobControle.Blazor;
 
@@ -12,17 +16,33 @@ public class Program
 {
     public async static Task<int> Main(string[] args)
     {
+
+        var configuration = new ConfigurationBuilder()
+                            .SetBasePath(WebApplication.CreateBuilder(args).Environment.ContentRootPath)
+                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                            .AddEnvironmentVariables()
+                            .Build();
+
         Log.Logger = new LoggerConfiguration()
-#if DEBUG
+            .Enrich.FromLogContext()
+
+            #if DEBUG
             .MinimumLevel.Debug()
-#else
+            #else
             .MinimumLevel.Information()
-#endif
+            #endif
+
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
             .Enrich.FromLogContext()
             .WriteTo.Async(c => c.File("Logs/logs.txt"))
             .WriteTo.Async(c => c.Console())
+            .WriteTo.PostgreSQL(
+                connectionString: configuration.GetConnectionString("Default"),
+                tableName: "Logs", 
+                needAutoCreateTable: false,
+                restrictedToMinimumLevel: LogEventLevel.Information
+            )
             .CreateLogger();
 
         try

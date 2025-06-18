@@ -792,6 +792,28 @@ namespace DinheiroSobControle.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Logs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    MessageTemplate = table.Column<string>(type: "text", nullable: true),
+                    Level = table.Column<string>(type: "text", nullable: true),
+                    TimeStamp = table.Column<DateTimeOffset>(type: "timestamp without time zone", nullable: false),
+                    Exception = table.Column<string>(type: "text", nullable: true),
+                    Properties = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Log_LogId",
+                table: "Logs",
+                column: "Id");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AbpAuditLogActions_AuditLogId",
                 table: "AbpAuditLogActions",
@@ -1141,6 +1163,9 @@ namespace DinheiroSobControle.Migrations
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
+
+            migrationBuilder.DropTable(
+                name: "Logs");
         }
     }
 }
